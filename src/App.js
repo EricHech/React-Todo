@@ -38,24 +38,26 @@ class App extends React.Component {
   };
 
   toggleComplete = id => {
-    this.setState(prevState => ({
-      todos: prevState.todos.map(each => {
-        if (each.id === id) each.completed = !each.completed;
-        return each;
-      })
-    }));
-
-    this.updateLocalStorage();
+    this.setState(
+      prevState => ({
+        todos: prevState.todos.map(each => {
+          if (each.id === id) each.completed = !each.completed;
+          return each;
+        })
+      }),
+      this.updateLocalStorage
+    );
   };
 
   removeComplete = event => {
-    this.setState(prevState => ({
-      todos: prevState.todos.filter(each => {
-        return each.completed === false;
-      })
-    }));
-
-    this.updateLocalStorage();
+    this.setState(
+      prevState => ({
+        todos: prevState.todos.filter(each => {
+          return each.completed === false;
+        })
+      }),
+      this.updateLocalStorage
+    );
   };
 
   render() {
