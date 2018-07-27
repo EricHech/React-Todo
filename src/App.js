@@ -7,20 +7,17 @@ import { TodoForm } from "./components/TodoComponents/TodoForm";
 class App extends React.Component {
   state = {
     input: "",
-    todos: [
-      {
-        task: "Organize Garage",
-        id: uuid(),
-        date: new Date(),
-        completed: false
-      },
-      {
-        task: "Bake Cookies",
-        id: uuid(),
-        date: new Date(),
-        completed: false
-      }
-    ]
+    todos: []
+  };
+
+  componentDidMount() {
+    this.setState({
+      todos: JSON.parse(localStorage.getItem("todos")) || []
+    });
+  }
+
+  updateLocalStorage = () => {
+    localStorage.setItem("todos", JSON.stringify(this.state.todos));
   };
 
   handleChange = event => {
@@ -36,6 +33,8 @@ class App extends React.Component {
       completed: false
     });
     this.setState({ input: "", todos });
+
+    this.updateLocalStorage();
   };
 
   toggleComplete = id => {
@@ -45,6 +44,8 @@ class App extends React.Component {
         return each;
       })
     }));
+
+    this.updateLocalStorage();
   };
 
   removeComplete = event => {
@@ -53,6 +54,8 @@ class App extends React.Component {
         return each.completed === false;
       })
     }));
+
+    this.updateLocalStorage();
   };
 
   render() {
