@@ -2,10 +2,11 @@ import React from "react";
 import uuid from "uuid";
 
 import { TodoList } from "./components/TodoComponents/TodoList";
-import TodoForm from "./components/TodoComponents/TodoForm";
+import { TodoForm } from "./components/TodoComponents/TodoForm";
 
 class App extends React.Component {
   state = {
+    input: "",
     todos: [
       {
         task: "Organize Garage",
@@ -22,16 +23,52 @@ class App extends React.Component {
     ]
   };
 
-  // you will need a place to store your state in this component.
-  // design `App` to be the parent component of your application.
-  // this component is going to take care of state, and any change handlers you need to work with your state
+  handleChange = event => {
+    this.setState({ input: event.target.value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const todos = this.state.todos.concat({
+      task: this.state.input,
+      id: uuid(),
+      date: new Date(),
+      completed: false
+    });
+    this.setState({ input: "", todos });
+  };
+
+  toggleComplete = id => {
+    this.setState(prevState => ({
+      todos: prevState.todos.map(each => {
+        if (each.id === id) each.completed = !each.completed;
+        return each;
+      })
+    }));
+  };
+
+  removeComplete = event => {
+    this.setState(prevState => ({
+      todos: prevState.todos.filter(each => {
+        return each.completed === false;
+      })
+    }));
+  };
+
   render() {
-    console.log(this.state);
     return (
       <div>
         <h2>Welcome to your Todo App!</h2>
-        <TodoList todos={this.state.todos} />
-        <TodoForm />
+        <TodoList
+          todos={this.state.todos}
+          toggleComplete={this.toggleComplete}
+        />
+        <TodoForm
+          input={this.state.input}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+        />
+        <button onClick={this.removeComplete}>Remove Completed</button>
       </div>
     );
   }
